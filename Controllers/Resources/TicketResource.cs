@@ -8,9 +8,11 @@ namespace TSC.Controllers.Resources
         public int Id { get; set; }
         [Required]
         [StringLength(255)]
+        [MinLength(5)]
         public string Subject { get; set; }
         [Required]
         [StringLength(255)]
+        [MinLength(10)]
         public string Body { get; set; }
         public DateTime CreationDate { get; set; }
         [Required]

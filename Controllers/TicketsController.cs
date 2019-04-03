@@ -52,12 +52,23 @@ namespace TSC.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTicket(int id)
         {
-            return Ok();
+            var ticket = await repository.Get(id);
+
+            if(ticket == null)
+                return NotFound();
+
+            var ticketResource = mapper.Map<Ticket,TicketResource>(ticket);
+            return Ok(ticketResource);
         }
         [HttpGet]
-        public async Task<IActionResult> GetTickets()
+        public async Task<QueryResultResource<TicketResource>> GetTickets(TicketQueryResource filterResource)
         {
-            return Ok();
+            var filter = mapper.Map<TicketQueryResource, TicketQuery>(filterResource);
+            var queryResult = await repository.GetTickets(filter);
+
+            return mapper.Map<QueryResult<Ticket>, QueryResultResource<TicketResource>>(queryResult);
         }
+
+
     }
 }

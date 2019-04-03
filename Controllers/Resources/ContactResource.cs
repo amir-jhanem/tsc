@@ -6,9 +6,10 @@ namespace TSC.Controllers.Resources
     {
         [Required]
         [StringLength(255)]
+        [MinLength(2)]
         public string Name { get; set; }
         [Required]
-        [StringLength(255)]
+        [EmailAddress]
         public string Email { get; set; }
     }
 }
