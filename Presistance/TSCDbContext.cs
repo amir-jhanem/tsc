@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TSC.Core.Models;
 
 namespace TSC.Presistance
 {
@@ -8,5 +9,6 @@ namespace TSC.Presistance
         {
             
         }
+        public DbSet<Ticket> Tickets { get; set; }
     }
 }
