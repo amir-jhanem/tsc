@@ -1,7 +1,10 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using TSC.Controllers.Resources;
 using TSC.Core;
+using TSC.Core.Models;
 
 namespace TSC.Controllers
 {
@@ -18,9 +21,18 @@ namespace TSC.Controllers
             this.repository = repository;
         }
         [HttpPost]
-        public async Task<IActionResult> CreateTicket()
+        public async Task<IActionResult> CreateTicket([FromBody] TicketResource ticketResource)
         {
-            return Ok();
+            var ticket = mapper.Map<TicketResource,Ticket>(ticketResource);
+            ticket.CreationDate = DateTime.Now;
+
+            repository.Add(ticket);
+            await unitOfWork.CompleteAsync();
+
+            ticket = await repository.Get(ticket.Id);
+            var result = mapper.Map<Ticket,TicketResource>(ticket);
+
+            return Ok(result);
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)
