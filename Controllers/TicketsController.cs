@@ -23,6 +23,8 @@ namespace TSC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTicket([FromBody] TicketResource ticketResource)
         {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
             var ticket = mapper.Map<TicketResource,Ticket>(ticketResource);
             ticket.CreationDate = DateTime.Now;
 
@@ -37,7 +39,15 @@ namespace TSC.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)
         {
-            return Ok();
+            var ticket = await repository.Get(id);
+
+            if(ticket == null)
+                return NotFound();
+
+            repository.Remove(ticket);
+            await unitOfWork.CompleteAsync();
+
+            return Ok(id);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTicket(int id)
