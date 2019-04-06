@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using TSC.Controllers.Resources;
 using TSC.Core;
 using TSC.Core.Models;
 using TSC.Extensions;
@@ -38,5 +39,21 @@ namespace TSC.Presistance
 
             return result;
         }
+
+        public void AssignTicket(AssignTicketResource assignTicketResource)
+        {
+            var TicketsAssign = context.TicketsAssign.Where(ug=> ug.TicketId == assignTicketResource.TicketId &&ug.GroupId == assignTicketResource.GroupId ).FirstOrDefault();
+            if(TicketsAssign == null){
+                context.TicketsAssign.Add(new TicketAssign{TicketId = assignTicketResource.TicketId,GroupId = assignTicketResource.GroupId,AssignDate = DateTime.Now , Status = assignTicketResource.Status});
+            }else{
+
+                if(assignTicketResource.IsRemoved){
+                    context.TicketsAssign.Remove(TicketsAssign);                    
+                }
+            }
+            
+        }
+
+
     }
 }

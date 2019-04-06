@@ -47,12 +47,17 @@ namespace TSC.Presistance
             return result;
         }
 
-        public void AddMemberGroup(string userId,int groupId)
+        public void MemberGroup(UserGroupResource userGroupResource)
         {
-            var isExist = context.UserGroups.Any(ug=>ug.GroupId == groupId && ug.UserId == userId);
-            if(!isExist){
-                context.UserGroups.Add(new UserGroup{GroupId = groupId,UserId = userId});
+            var userGroup = context.UserGroups.Where(ug=>ug.GroupId == userGroupResource.GroupId && ug.UserId == userGroupResource.UserId).FirstOrDefault();
+            if(userGroup == null){
+                context.UserGroups.Add(new UserGroup{GroupId = userGroupResource.GroupId,UserId = userGroupResource.UserId});
+            }else{
+                if(userGroupResource.IsRemoved){
+                    context.UserGroups.Remove(userGroup);                    
+                }
             }
+            
         }
     }
 }

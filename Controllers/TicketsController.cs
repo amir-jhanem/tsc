@@ -9,7 +9,6 @@ using TSC.Core.Models;
 
 namespace TSC.Controllers
 {
-    [Authorize]
     [Route("/api/tickets")]
     public class TicketsController : Controller
     {
@@ -70,6 +69,18 @@ namespace TSC.Controllers
             var queryResult = await repository.GetTickets(filter);
 
             return mapper.Map<QueryResult<Ticket>, QueryResultResource<TicketResource>>(queryResult);
+        }
+
+        [HttpPost]
+        [Route("AssinTickets")]
+        public IActionResult AssinTicket([FromBody]AssignTicketResource model )
+        {
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            repository.AssignTicket(model);
+            unitOfWork.CompleteAsync();
+            return Ok(model);
         }
 
 

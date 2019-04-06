@@ -94,13 +94,13 @@ namespace TSC.Controllers
             return BadRequest(result.Errors);
         }
         [HttpPost]
-        [Route("AddMemberGroup")]
-        public IActionResult AddMemberGroup([FromBody] UserGroupResource model)
+        [Route("MemberGroups")]
+        public IActionResult MemberGroup([FromBody] UserGroupResource model)
         {
             if(!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
-            groupRepository.AddMemberGroup(model.UserId,model.GroupId);
+            groupRepository.MemberGroup(model);
             unitOfWork.CompleteAsync();
             return Ok(model);
         }

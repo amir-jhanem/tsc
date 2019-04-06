@@ -7,6 +7,6 @@ namespace TSC.Core
     public interface IGroupRepository:IRepository<Group>
     {
         Task<QueryResult<GetGroupResource>> GetGroups(ModelQuery queryObj);
-        void AddMemberGroup(string userId,int groupId);
+        void MemberGroup(UserGroupResource userGroupResource);
     }
 }
