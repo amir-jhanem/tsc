@@ -1,0 +1,35 @@
+<h2>Tickets</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th *ngFor="let c of columns">
+        <div *ngIf="c.isSortable" (click)="sortBy(c.key)">
+          {{ c.title }}
+          <i *ngIf="query.sortBy === c.key" 
+            class="fa"
+            [class.fa-sort-asc]="query.isSortAscending"
+            [class.fa-sort-desc]="!query.isSortAscending"
+          ></i>
+        </div>
+        <div *ngIf="!c.isSortable">
+          {{ c.title }}
+        </div>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let t of queryResult.items">
+      <td class="text-truncate" style="max-width: 300px;">{{ t.subject }}</td>
+      <td data-toggle="tooltip" data-placement="top" title="Tooltip on top">{{ t.creationDate | date: 'dd/MM/yyyy' }}</td>
+      <td>Group #1</td>
+      <td>In progress</td>
+      <td>
+        <a [routerLink]="['/tickets/', t.id]">View</a>
+      </td>
+    </tr>
+    <tr *ngIf="!queryResult.items">
+      <td colspan="5">You don't have tickets</td>
+    </tr>
+  </tbody>
+</table>
+<pagination [total-items]="queryResult.totalItems" [page-size]="query.pageSize" (page-changed)="onPageChange($event)"></pagination>

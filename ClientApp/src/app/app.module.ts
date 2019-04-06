@@ -8,23 +8,25 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 
 import { TicketService } from './services/ticket.service';
-import { NavMenuComponent } from './nav-menu/nav-menu.component';
-import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
+import { NavMenuComponent } from './components/shared/nav-menu/nav-menu.component';
+import { HomeComponent } from './components/home/home.component';
 
-import { TicketFormComponent } from './components/ticket-form/ticket-form.component';
+import { TicketFormComponent } from './components/tickets/ticket-form/ticket-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { TicketListComponent } from './components/tickets/ticket-list/ticket-list.component';
+import { TicketViewComponent } from './components/tickets/ticket-view/ticket-view.component';
+import { PaginationComponent } from './components/shared/pagination/pagination.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
-    TicketFormComponent
+    TicketFormComponent,
+    TicketListComponent,
+    TicketViewComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -34,11 +36,14 @@ import { ToastrModule } from 'ngx-toastr';
     FormsModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'home', component: HomeComponent, pathMatch: 'full' },
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
-      { path: 'tickets/new', component: TicketFormComponent }
+      { path: '', redirectTo: 'tickets', pathMatch: 'full' },
+      { path: 'tickets/new', component: TicketFormComponent },
+      { path: 'tickets/:id', component: TicketViewComponent },
+      { path: 'tickets', component: TicketListComponent },
+      { path: 'home', component: HomeComponent },
+      { path: '**', redirectTo: 'home' },
+
+
     ])
   ],
   providers: [TicketService],

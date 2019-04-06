@@ -1,0 +1,18 @@
+<h1>{{ticket.subject}}</h1>
+<h6>
+    Customer: {{ticket.contact.name}} | Creation Date: {{ticket.creationDate | date: 'dd/MM/yyyy'}}
+</h6>
+<hr>
+<P>
+  {{ticket.body}}
+</P>
+<br>
+<h4>Customer Contact</h4>
+<ul>
+  <li>Name: {{ticket.contact.name}}</li>
+  <li>Email: {{ticket.contact.email}}</li>
+</ul>
+
+<a [routerLink]='["/tickets"]'>Back to Ticket list</a>
+
+
