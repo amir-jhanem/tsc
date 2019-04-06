@@ -14,7 +14,7 @@ namespace TSC.Mapping
                 .ForMember(tr => tr.Contact, opt =>opt.MapFrom(t => new ContactResource{ Name = t.ContactName,Email = t.ContactEmail}));
 
             // API Resource to Domain
-            CreateMap<TicketQueryResource, TicketQuery>();
+            CreateMap<QueryResource, ModelQuery>();
             CreateMap<TicketResource,Ticket>()
                 .ForMember(t=>t.Id,opt =>opt.Ignore())
                 .ForMember(t=>t.ContactName,opt =>opt.MapFrom(tr=>tr.Contact.Name))

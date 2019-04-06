@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TSC.Presistance;
 
 namespace TSC.Migrations
 {
     [DbContext(typeof(TSCDbContext))]
-    partial class TSCDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190406142044_AssignTickets")]
+    partial class AssignTickets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

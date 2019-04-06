@@ -18,7 +18,7 @@ namespace TSC.Presistance
             this.context = context;
         }
 
-        public async Task<QueryResult<Ticket>> GetTickets(TicketQuery queryObj)
+        public async Task<QueryResult<Ticket>> GetTickets(ModelQuery queryObj)
         {
             var result = new QueryResult<Ticket>();
 

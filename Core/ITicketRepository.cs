@@ -5,6 +5,6 @@ namespace TSC.Core
 {
     public interface ITicketRepository: IRepository<Ticket>
     {
-         Task<QueryResult<Ticket>> GetTickets(TicketQuery queryObj);
+         Task<QueryResult<Ticket>> GetTickets(ModelQuery queryObj);
     }
 }

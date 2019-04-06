@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using TSC.Controllers.Resources;
+using TSC.Core;
 using TSC.Core.Models;
 
 namespace TSC.Controllers
@@ -15,24 +17,33 @@ namespace TSC.Controllers
     [Route("api/AuthController")]
     public class AuthController:Controller
     {
+        private readonly IGroupRepository groupRepository;
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _singInManager;
+        private RoleManager<IdentityRole> _roleManager;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IConfiguration configuration;
 
         public AuthController(
+            IGroupRepository groupRepository,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
+            IUnitOfWork unitOfWork,
             IConfiguration configuration)
         {
+            this.groupRepository = groupRepository;
             _userManager = userManager;
             _singInManager = signInManager;
+            _roleManager = roleManager;
+            this.unitOfWork = unitOfWork;
             this.configuration = configuration;
         }
 
         [HttpPost]
         [Route("Login")]
         //POST : /api/AuthController/Login
-        public async Task<Object> UserLogin([FromBody]ApplicationUserModel model)
+        public async Task<IActionResult> UserLogin([FromBody]ApplicationUserResource model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
             if(user != null && await _userManager.CheckPasswordAsync(user,model.Password))
@@ -61,23 +72,53 @@ namespace TSC.Controllers
         [HttpPost]
         [Route("Register")]
         //POST : /api/AuthController/Register
-        public async Task<Object> UserRegister([FromBody]ApplicationUserModel model)
+        public async Task<IActionResult> UserRegister([FromBody]ApplicationUserResource model)
         {
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
             var applicationUser = new ApplicationUser() {
                 UserName = model.UserName,
                 Email = model.Email,
                 FullName = model.FullName
             };
+            await InitialRoles();
 
-            try
-            {
-                var result = await _userManager.CreateAsync(applicationUser, model.Password);
+            var result = await _userManager.CreateAsync(applicationUser, model.Password);
+
+            if(result.Succeeded){
+                await _userManager.AddToRoleAsync(applicationUser, model.IsAdmin ? "Admin":"Moderator");
                 return Ok(result);
             }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+
+            return BadRequest(result.Errors);
         }
+        [HttpPost]
+        [Route("AddMemberGroup")]
+        public IActionResult AddMemberGroup([FromBody] UserGroupResource model)
+        {
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            groupRepository.AddMemberGroup(model.UserId,model.GroupId);
+            unitOfWork.CompleteAsync();
+            return Ok(model);
+        }
+
+        public async Task InitialRoles(){
+
+            string[] roleNames = {"Admin", "Moderator"};
+            IdentityResult roleResult;
+
+                foreach (var roleName in roleNames)
+                {
+                    var roleExist = await _roleManager.RoleExistsAsync(roleName);
+                    if (!roleExist)
+                    {
+                        //create the roles and seed them to the database: Question 1
+                        roleResult = await _roleManager.CreateAsync(new IdentityRole(roleName));
+                    }
+                }
+        }   
     }
 }

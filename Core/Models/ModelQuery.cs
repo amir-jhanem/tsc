@@ -2,7 +2,7 @@ using TSC.Extensions;
 
 namespace TSC.Core.Models
 {
-    public class TicketQuery:IQueryObject
+    public class ModelQuery:IQueryObject
     {
         public string SortBy { get; set; }
         public bool IsSortAscending { get; set; }

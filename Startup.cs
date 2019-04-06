@@ -14,6 +14,7 @@ using TSC.Core.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TSC
 {
@@ -30,7 +31,7 @@ namespace TSC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<ITicketRepository,TicketRepository>();
-            services.AddScoped<IUnitOfWork,UnitOfWork>();
+            services.AddScoped<IGroupRepository,GroupRepository>();
             services.AddScoped<IUnitOfWork,UnitOfWork>();
 
             services.AddAutoMapper();
@@ -102,5 +103,6 @@ namespace TSC
                 }
             });
         }
+
     }
 }

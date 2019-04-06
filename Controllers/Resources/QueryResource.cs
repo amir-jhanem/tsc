@@ -1,6 +1,6 @@
 namespace TSC.Controllers.Resources
 {
-    public class TicketQueryResource
+    public class QueryResource
     {
         public string SortBy { get; set; }
         public bool IsSortAscending { get; set; }

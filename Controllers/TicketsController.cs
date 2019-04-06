@@ -64,9 +64,9 @@ namespace TSC.Controllers
             return Ok(ticketResource);
         }
         [HttpGet]
-        public async Task<QueryResultResource<TicketResource>> GetTickets(TicketQueryResource filterResource)
+        public async Task<QueryResultResource<TicketResource>> GetTickets(QueryResource filterResource)
         {
-            var filter = mapper.Map<TicketQueryResource, TicketQuery>(filterResource);
+            var filter = mapper.Map<QueryResource, ModelQuery>(filterResource);
             var queryResult = await repository.GetTickets(filter);
 
             return mapper.Map<QueryResult<Ticket>, QueryResultResource<TicketResource>>(queryResult);
