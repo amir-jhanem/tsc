@@ -9,6 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using TSC.Core;
 using TSC.Presistance;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using TSC.Core.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace TSC
 {
@@ -30,7 +35,26 @@ namespace TSC
 
             services.AddAutoMapper();
             services.AddDbContext<TSCDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
 
+            services.AddIdentity<ApplicationUser,IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(options =>{
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            })
+            .AddJwtBearer(options => new TokenValidationParameters{
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidAudience = Configuration.GetSection("issuer").ToString(),
+                ValidIssuer = Configuration.GetSection("audience").ToString(),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("signingKey").ToString())),
+
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -57,7 +81,7 @@ namespace TSC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

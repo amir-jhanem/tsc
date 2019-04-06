@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TSC.Controllers.Resources;
 using TSC.Core;
@@ -8,6 +9,7 @@ using TSC.Core.Models;
 
 namespace TSC.Controllers
 {
+    [Authorize]
     [Route("/api/tickets")]
     public class TicketsController : Controller
     {
@@ -20,6 +22,7 @@ namespace TSC.Controllers
             this.mapper = mapper;
             this.repository = repository;
         }
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateTicket([FromBody] TicketResource ticketResource)
         {
