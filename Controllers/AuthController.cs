@@ -64,10 +64,14 @@ namespace TSC.Controllers
 			        signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256)
                 );
 
-                return Ok(new {
+                var data =  new TokenResultResource {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
-                    Expiration = token.ValidTo
-                });
+                    Expiration = token.ValidTo,
+                    isAdmin =  _userManager.IsInRoleAsync(user,"Admin").Result,
+                    FullName = user.FullName 
+                };
+
+                return Ok(data);
             }
             return Unauthorized();
         }
