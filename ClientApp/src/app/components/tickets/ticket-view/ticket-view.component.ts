@@ -14,6 +14,7 @@ export class TicketViewComponent implements OnInit {
   ticket: SaveTicket;
   groups: [];
   ticketId: number; 
+  selectedGroup: number; 
   constructor(
     private route: ActivatedRoute, 
     private router: Router,
@@ -62,9 +63,12 @@ export class TicketViewComponent implements OnInit {
       console.log(result.items);
     });;
   }
-
-  assignTicket(ticketId,groupId){
-    this.ticketService.assignTicket(ticketId,groupId)
+  setSelectedGroup(groupId){
+this.selectedGroup = groupId;
+  }
+  assignTicket(){
+    console.log(this.selectedGroup);
+    this.ticketService.assignTicket(this.ticketId,this.selectedGroup)
       .subscribe(res =>{
         this.toastrService.success('Assign Group Success', 'Success!');
 

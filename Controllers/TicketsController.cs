@@ -78,7 +78,9 @@ namespace TSC.Controllers
             if(!ModelState.IsValid){
                 return BadRequest(ModelState);
             }
+            model.Status = false;
             repository.AssignTicket(model);
+            
             unitOfWork.CompleteAsync();
             return Ok(model);
         }

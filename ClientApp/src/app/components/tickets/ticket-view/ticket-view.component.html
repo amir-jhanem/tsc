@@ -18,11 +18,12 @@
 
 <select class="browser-default custom-select">
   <option selected>Select Group</option>
-  <option *ngFor="let g of groups" [value]="g.id" #assignGroup="ngModel" [attr.selected]="g.name">{{g.name}}</option>
+  <option *ngFor="let g of groups" [value]="g.id" (click)="setSelectedGroup(g.id)"  [attr.selected]="g.name">{{g.name}}</option>
 </select>
 <br>
 <p>
   <input class="btn btn-danger" type="button" (click)="delete()" value="Delete">
+<input class="btn btn-primary" type="button" (click)="assignTicket()"  value="Submit">
 </p>
 
 
