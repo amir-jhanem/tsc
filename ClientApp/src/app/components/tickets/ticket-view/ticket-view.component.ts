@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TicketService } from 'src/app/services/ticket.service';
 import { SaveTicket } from 'src/app/models/ticket';
+import { GroupService } from 'src/app/services/group.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-ticket-view',
@@ -10,11 +12,14 @@ import { SaveTicket } from 'src/app/models/ticket';
 })
 export class TicketViewComponent implements OnInit {
   ticket: SaveTicket;
+  groups: [];
   ticketId: number; 
   constructor(
     private route: ActivatedRoute, 
     private router: Router,
-    private ticketService: TicketService) {
+    private ticketService: TicketService,
+    private groupService: GroupService,
+    private toastrService:ToastrService) {
     route.params.subscribe(p => {
       this.ticketId = +p['id'];
       if (isNaN(this.ticketId) || this.ticketId <= 0) {
@@ -37,6 +42,7 @@ export class TicketViewComponent implements OnInit {
           return; 
         }
       });
+      this.getGroups();
   }
 
   delete() {
@@ -46,5 +52,23 @@ export class TicketViewComponent implements OnInit {
           this.router.navigate(['/tickets']);
         });
     }
+  }
+
+  getGroups(){
+    this.groupService.getAll({
+      pageSize: 50
+    }).subscribe(result => {
+      this.groups = result.items;
+      console.log(result.items);
+    });;
+  }
+
+  assignTicket(ticketId,groupId){
+    this.ticketService.assignTicket(ticketId,groupId)
+      .subscribe(res =>{
+        this.toastrService.success('Assign Group Success', 'Success!');
+
+        this.router.navigate(['/tickets']);
+      });
   }
 }

@@ -1,4 +1,4 @@
-<h2>Tickets</h2>
+<h2>Groups</h2>
 <table class="table">
   <thead>
     <tr>
@@ -18,19 +18,16 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let t of queryResult.items">
-      <td class="text-truncate" style="max-width: 300px;">{{ t.subject }}</td>
-      <td data-toggle="tooltip" data-placement="top" title="Tooltip on top">{{ t.creationDate | date: 'dd/MM/yyyy' }}</td>
-      <td *ngIf="t.group">{{ t.group }}</td>
-      <td *ngIf="!t.group">Not Assign</td>
-      <td *ngIf="t.status =='True'" class="text-success">Solved</td>
-      <td *ngIf="t.status =='False'" class="text-warning">In Progress</td>
+    <tr *ngFor="let g of queryResult.items">
+      <td class="text-truncate" style="max-width: 300px;">{{ g.name }}</td>
+      <td data-toggle="tooltip" data-placement="top" title="Tooltip on top">{{ g.totalMembers }}</td>
+      <td>{{ g.totalAssignTickets }}</td>
       <td>
-        <a [routerLink]="['/tickets/', t.id]">View</a>
+        <a [routerLink]="['/groups/', g.id]">View</a>
       </td>
     </tr>
     <tr *ngIf="!queryResult.items">
-      <td colspan="5">You don't have tickets</td>
+      <td colspan="5">You don't have groups</td>
     </tr>
   </tbody>
 </table>

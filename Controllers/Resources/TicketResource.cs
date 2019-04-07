@@ -15,6 +15,8 @@ namespace TSC.Controllers.Resources
         [MinLength(10)]
         public string Body { get; set; }
         public DateTime CreationDate { get; set; }
+        public string Group { get; set; }
+        public string Status { get; set; }
         [Required]
         public ContactResource Contact { get; set; }
     }

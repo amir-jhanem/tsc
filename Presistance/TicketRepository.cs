@@ -23,11 +23,15 @@ namespace TSC.Presistance
         {
             var result = new QueryResult<Ticket>();
 
-            var query = context.Tickets.AsQueryable();
+            var query = context.Tickets
+                            .Include(t=>t.TicketAssign)
+                                .ThenInclude(ta=>ta.Group)
+                            .AsQueryable();
         
             var columnsMap = new Dictionary<string, Expression<Func<Ticket, object>>>()
             {
-                ["date"] = t => t.CreationDate
+                ["date"] = t => t.CreationDate,
+                ["subject"] = t => t.Subject
             };
             query = query.ApplyOrdering(queryObj, columnsMap);
 

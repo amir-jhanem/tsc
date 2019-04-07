@@ -1,0 +1,16 @@
+<h1 *ngIf="group.id == 0">New Group</h1>
+<h1 *ngIf="group.id > 0">Update Group</h1>
+<form #f="ngForm" (ngSubmit)="submit()">
+  <div class="form-group">
+    <label for="name">Group Name</label>
+    <input id="name" type="text" class="form-control" [(ngModel)]="group.name" name="name" required #name="ngModel">
+    <div class="alert alert-danger" *ngIf="name.touched && !name.valid">Please specify group name.</div>
+  </div>
+  <h2>Members</h2>
+  <div *ngFor="let m of members" class="checkbox">
+    <label for="member{{ m.userName }}">
+      <input type="checkbox" id="member{{ m.userName}}" (change)="onMemberToggle(m.userName, $event)" [checked]="isUserExist(m.userName)"> {{ m.fullName }}
+    </label>
+  </div>
+  <button class="btn btn-primary" [disabled]="!f.valid">Send</button>
+</form>

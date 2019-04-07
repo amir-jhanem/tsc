@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TSC.Controllers.Resources;
@@ -20,7 +22,7 @@ namespace TSC.Controllers
         private readonly IGroupRepository groupRepository;
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _singInManager;
-        private RoleManager<IdentityRole> _roleManager;
+        private RoleManager<ApplicationRole> _roleManager;
         private readonly IUnitOfWork unitOfWork;
         private readonly IConfiguration configuration;
 
@@ -28,7 +30,7 @@ namespace TSC.Controllers
             IGroupRepository groupRepository,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            RoleManager<IdentityRole> roleManager,
+            RoleManager<ApplicationRole> roleManager,
             IUnitOfWork unitOfWork,
             IConfiguration configuration)
         {
@@ -93,16 +95,16 @@ namespace TSC.Controllers
 
             return BadRequest(result.Errors);
         }
-        [HttpPost]
-        [Route("MemberGroups")]
-        public IActionResult MemberGroup([FromBody] UserGroupResource model)
+
+        [HttpGet]
+        [Route("GetMembers")]
+        public async Task<IActionResult> GetMembers()
         {
-            if(!ModelState.IsValid){
-                return BadRequest(ModelState);
+            var users =  await _userManager.Users.Include(u => u.UserRoles).ThenInclude(ur => ur.Role).Where(u=>u.UserRoles.FirstOrDefault().Role.Name == "Moderator" ).Select(u=>new GetMemberResource { UserName = u.UserName , FullName = u.FullName}).ToListAsync();
+            if(users == null){
+            return NotFound();
             }
-            groupRepository.MemberGroup(model);
-            unitOfWork.CompleteAsync();
-            return Ok(model);
+            return Ok(users);
         }
 
         public async Task InitialRoles(){
@@ -115,8 +117,7 @@ namespace TSC.Controllers
                     var roleExist = await _roleManager.RoleExistsAsync(roleName);
                     if (!roleExist)
                     {
-                        //create the roles and seed them to the database: Question 1
-                        roleResult = await _roleManager.CreateAsync(new IdentityRole(roleName));
+                        roleResult = await _roleManager.CreateAsync(new ApplicationRole(roleName));
                     }
                 }
         }   

@@ -22,17 +22,26 @@ namespace TSC.Controllers
             this.repository = repository;
         }
         [HttpPost]
-        public async Task<IActionResult> CreateGroup([FromBody] Group group)
+        public async Task<IActionResult> CreateGroup([FromBody] SaveGroupResource saveGroupResource)
         {
-            if(!ModelState.IsValid)
+            if(!ModelState.IsValid){
                 return BadRequest(ModelState);
-
-            repository.Add(group);
+            }
+            repository.Add(saveGroupResource);
             await unitOfWork.CompleteAsync();
-
-            var result = await repository.Get(group.Id);
-            return Ok(result);
+            return Ok(saveGroupResource);
         }
+        [HttpPut]
+        public async Task<IActionResult> UpdateGroup([FromBody] SaveGroupResource saveGroupResource)
+        {
+            if(!ModelState.IsValid){
+                return BadRequest(ModelState);
+            }
+            repository.Update(saveGroupResource);
+            await unitOfWork.CompleteAsync();
+            return Ok(saveGroupResource);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
@@ -49,13 +58,14 @@ namespace TSC.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroup(int id)
         {
-            var group = await repository.Get(id);
+            var group = await repository.GetGroup(id);
 
             if(group == null)
                 return NotFound();
 
             return Ok(group);
         }
+
         [HttpGet]
         public async Task<QueryResult<GetGroupResource>> GetGroups(QueryResource filterResource)
         {

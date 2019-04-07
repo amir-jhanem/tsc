@@ -5,34 +5,37 @@ import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class TicketService {
-  private readonly ticketsEndpoint = '/api/tickets';
+export class GroupService {
+  private readonly groupsEndpoint = '/api/groups';
 
   constructor(private http: Http) { }
 
   get(id) {
-    return this.http.get(this.ticketsEndpoint+ '/' + id)
+    return this.http.get(this.groupsEndpoint+ '/' + id)
       .pipe(map(res => res.json()));
   }
 
   getAll(filter) {
-    return this.http.get(this.ticketsEndpoint + '?' + this.toQueryString(filter))
+    return this.http.get(this.groupsEndpoint + '?' + this.toQueryString(filter))
       .pipe(map(res => res.json()));
   }
 
-  create(ticket) {
-    return this.http.post(this.ticketsEndpoint, ticket)
+  getMembers() {
+    return this.http.get("/api/AuthController/GetMembers")
+      .pipe(map(res => res.json()));
+  }
+
+  create(group) {
+    return this.http.post(this.groupsEndpoint, group)
+      .pipe(map(res => res.json()));
+  }
+  update(group) {
+    return this.http.put(this.groupsEndpoint, group)
       .pipe(map(res => res.json()));
   }
 
   delete(id) {
-    return this.http.delete(this.ticketsEndpoint+ '/' + id)
-      .pipe(map(res => res.json()));
-  }
-
-  assignTicket(ticketId,groupId) {
-    console.log(ticketId,groupId);
-    return this.http.post(this.ticketsEndpoint+"/AssinTickets", {ticketId : ticketId ,groupId:groupId})
+    return this.http.delete(this.groupsEndpoint+ '/' + id)
       .pipe(map(res => res.json()));
   }
 

@@ -2,6 +2,7 @@
 <h6>
     Customer: {{ticket.contact.name}} | Creation Date: {{ticket.creationDate | date: 'dd/MM/yyyy'}}
 </h6>
+<a [routerLink]='["/tickets"]'>Back to Ticket list</a>
 <hr>
 <P>
   {{ticket.body}}
@@ -12,7 +13,17 @@
   <li>Name: {{ticket.contact.name}}</li>
   <li>Email: {{ticket.contact.email}}</li>
 </ul>
+<br>
+<h4>Assign To Group</h4>
 
-<a [routerLink]='["/tickets"]'>Back to Ticket list</a>
+<select class="browser-default custom-select">
+  <option selected>Select Group</option>
+  <option *ngFor="let g of groups" [value]="g.id" #assignGroup="ngModel" [attr.selected]="g.name">{{g.name}}</option>
+</select>
+<br>
+<p>
+  <input class="btn btn-danger" type="button" (click)="delete()" value="Delete">
+</p>
+
 
 

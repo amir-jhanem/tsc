@@ -22,5 +22,6 @@ namespace TSC.Core.Models
         [Required]
         [StringLength(255)]
         public string ContactEmail { get; set; }
+        public TicketAssign TicketAssign { get; set; }
     }
 }
