@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr'
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/services/user/user.model';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class SignUpComponent implements OnInit {
   user: User;
   emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
 
-  constructor(private userService: UserService, private toastr: ToastrService) { }
+  constructor(private userService: UserService,private router: Router, private toastrService: ToastrService) { }
 
   ngOnInit() {
     this.resetForm();
@@ -27,21 +28,25 @@ export class SignUpComponent implements OnInit {
       UserName: '',
       Password: '',
       Email: '',
-      FirstName: '',
-      LastName: ''
+      FullName: '',
+      IsAdmin: false
     }
   }
 
   OnSubmit(form: NgForm) {
+    console.log(form.value);
     this.userService.registerUser(form.value)
-      .subscribe((data: any) => {
-        if (data.Succeeded == true) {
-          this.resetForm(form);
-          this.toastr.success('User registration successful');
-        }
-        else
-          this.toastr.error(data.Errors[0]);
+    .subscribe(t=>{
+      console.log(t);
+      this.toastrService.success('User Created Success', 'Success!');
+      this.router.navigate(['/home']);
+    },
+    err =>{
+      this.toastrService.error('An unexpected error happened', 'Error', {
+        timeOut: 3000
       });
+
+    });
   }
 
 }

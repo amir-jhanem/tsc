@@ -1,6 +1,9 @@
+import { AuthService } from 'src/app/auth/auth.service';
 import { Injectable, Inject } from '@angular/core';
-import { Http } from '@angular/http';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Http, Headers, Response } from '@angular/http';
+
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +11,7 @@ import { map } from 'rxjs/operators';
 export class TicketService {
   private readonly ticketsEndpoint = '/api/tickets';
 
-  constructor(private http: Http) { }
+  constructor(private http: Http,private auth :AuthService) { }
 
   get(id) {
     return this.http.get(this.ticketsEndpoint+ '/' + id)
@@ -25,14 +28,21 @@ export class TicketService {
       .pipe(map(res => res.json()));
   }
 
-  delete(id) {
-    return this.http.delete(this.ticketsEndpoint+ '/' + id)
+  delete(id) : Observable<any>  {
+    const headers = new Headers({
+      'Content-Type': 'application/json',
+      'Authorization': this.auth.getToken()
+    });
+    console.log(this.auth.getToken());
+    return this.http.delete(this.ticketsEndpoint+ '/' + id, { headers: headers })
       .pipe(map(res => res.json()));
   }
 
   assignTicket(ticketId,groupId) {
-    console.log(ticketId,groupId);
-    return this.http.post(this.ticketsEndpoint+"/AssinTickets", {ticketId : ticketId ,groupId:groupId})
+    var data = {ticketId : ticketId ,groupId:groupId};
+    console.log(data);
+
+    return this.http.post(this.ticketsEndpoint+"/AssinTickets",data )
       .pipe(map(res => res.json()));
   }
 
@@ -46,4 +56,6 @@ export class TicketService {
 
     return parts.join('&');
   }
+
+
 }

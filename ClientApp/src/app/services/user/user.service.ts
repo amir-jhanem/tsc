@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 
 @Injectable()
 export class UserService {
-  readonly rootUrl = 'https://localhost:5001';
   private readonly authEndpoint = '/api/AuthController';
 
   constructor(private http: Http) { }
@@ -16,10 +15,11 @@ export class UserService {
       UserName: user.UserName,
       Password: user.Password,
       Email: user.Email,
-      FirstName: user.FirstName,
-      LastName: user.LastName
+      FullName: user.FullName,
+      IsAdmin: user.IsAdmin
     }
-    return this.http.post(this.authEndpoint + '/Register', body);
+    return this.http.post(this.authEndpoint + '/Register', body)
+      .pipe(map(res => res.json()));
   }
 
   userAuthentication(userName, password) {

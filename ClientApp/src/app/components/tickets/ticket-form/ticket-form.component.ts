@@ -36,7 +36,6 @@ export class TicketFormComponent implements OnInit {
   submit(){
     this.ticketService.create(this.ticket)
         .subscribe(t=>{
-          console.log(t);
           this.toastrService.success('Thanks for your request we will contanct with you by email', 'Success!');
           this.router.navigate(['/home']);
         },

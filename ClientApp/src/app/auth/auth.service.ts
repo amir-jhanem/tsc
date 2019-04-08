@@ -9,7 +9,6 @@ export class AuthService {
 
   public authenticated(isAdmin) {
     var userToken =  JSON.parse(localStorage.getItem('userToken'));
-    console.log(userToken);
     if (userToken != null)
     {
       if(isAdmin)
@@ -32,6 +31,12 @@ export class AuthService {
     var userToken = localStorage.getItem('userToken');
 
     return JSON.parse(userToken).fullName;
+  }
+  getToken(){
+    var userToken = localStorage.getItem('userToken');
+
+    return JSON.parse(userToken).token;
+
   }
   public logout() {
     // Remove token from localStorage

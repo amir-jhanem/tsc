@@ -4,6 +4,7 @@ import { TicketService } from 'src/app/services/ticket.service';
 import { SaveTicket } from 'src/app/models/ticket';
 import { GroupService } from 'src/app/services/group.service';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-ticket-view',
@@ -20,7 +21,8 @@ export class TicketViewComponent implements OnInit {
     private router: Router,
     private ticketService: TicketService,
     private groupService: GroupService,
-    private toastrService:ToastrService) {
+    private toastrService:ToastrService,
+    private auth :AuthService) {
     route.params.subscribe(p => {
       this.ticketId = +p['id'];
       if (isNaN(this.ticketId) || this.ticketId <= 0) {
@@ -60,7 +62,6 @@ export class TicketViewComponent implements OnInit {
       pageSize: 50
     }).subscribe(result => {
       this.groups = result.items;
-      console.log(result.items);
     });;
   }
   setSelectedGroup(groupId){

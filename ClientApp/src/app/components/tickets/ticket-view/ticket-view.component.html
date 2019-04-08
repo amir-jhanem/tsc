@@ -14,17 +14,20 @@
   <li>Email: {{ticket.contact.email}}</li>
 </ul>
 <br>
-<h4>Assign To Group</h4>
+<div *ngIf="auth.authenticated(true)">
+  <h4>Assign To Group</h4>
 
-<select class="browser-default custom-select">
-  <option selected>Select Group</option>
-  <option *ngFor="let g of groups" [value]="g.id" (click)="setSelectedGroup(g.id)"  [attr.selected]="g.name">{{g.name}}</option>
-</select>
-<br>
-<p>
-  <input class="btn btn-danger" type="button" (click)="delete()" value="Delete">
-<input class="btn btn-primary" type="button" (click)="assignTicket()"  value="Submit">
-</p>
+  <select class="browser-default custom-select">
+    <option selected>Select Group</option>
+    <option *ngFor="let g of groups" [value]="g.id" (click)="setSelectedGroup(g.id)"  [attr.selected]="g.name">{{g.name}}</option>
+  </select>
+  <br>
+  <p>
+    <input class="btn btn-danger" type="button" (click)="delete()" value="Delete">
+  <input class="btn btn-primary" type="button" (click)="assignTicket()"  value="Submit">
+  </p>
+</div>
+
 
 
 
